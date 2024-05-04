@@ -23,9 +23,17 @@
 			#processed-text li {
 				margin-bottom: 5px;
 			}
-			.cross-icon {
+			.copy-button {
+				margin-top: 10px;
+				padding: 8px 16px;
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				border-radius: 4px;
 				cursor: pointer;
-				user-select: none;
+			}
+			.copy-button:hover {
+				background-color: #45a049;
 			}
 		</style>
 	</head>
@@ -33,6 +41,7 @@
 		<h1>Text Processor</h1>
 		<textarea id="input-text" placeholder="Enter your passage..."></textarea>
 		<button onclick="processText()">Process Text</button>
+		<button class="copy-button" onclick="copyProcessedText()">Copy All</button>
 		<ol id="processed-text"></ol>
 
 		<script>
@@ -48,13 +57,23 @@
 
 				for (var i = 0; i < words.length; i++) {
 					var listItem = document.createElement('li');
-					listItem.innerHTML = '<span class="cross-icon" onclick="removeItem(this)">&#10006;</span> ' + words[i] + ' - ';
+					listItem.textContent = words[i] + ' - ';
 					list.appendChild(listItem);
 				}
 			}
 
-			function removeItem(item) {
-				item.parentNode.parentNode.removeChild(item.parentNode);
+			function copyProcessedText() {
+				var processedText = Array.from(document.querySelectorAll('#processed-text li'))
+					.map((li) => li.textContent)
+					.join('\n');
+				navigator.clipboard
+					.writeText(processedText)
+					.then(() => {
+						alert('Processed text copied to clipboard!');
+					})
+					.catch((err) => {
+						console.error('Failed to copy: ', err);
+					});
 			}
 		</script>
 	</body>
