@@ -1,80 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Text Processor</title>
-		<style>
-			body {
-				font-family: Arial, sans-serif;
-				margin: 0;
-				padding: 20px;
-			}
-			#input-text {
-				width: 100%;
-				height: 100px;
-				padding: 10px;
-				margin-bottom: 10px;
-			}
-			#processed-text {
-				list-style-type: none;
-				padding: 0;
-			}
-			#processed-text li {
-				margin-bottom: 5px;
-			}
-			.copy-button {
-				margin-top: 10px;
-				padding: 8px 16px;
-				background-color: #4caf50;
-				color: white;
-				border: none;
-				border-radius: 4px;
-				cursor: pointer;
-			}
-			.copy-button:hover {
-				background-color: #45a049;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Text Processor</h1>
-		<textarea id="input-text" placeholder="Enter your passage..."></textarea>
-		<button onclick="processText()">Process Text</button>
-		<button class="copy-button" onclick="copyProcessedText()">Copy All</button>
-		<ol id="processed-text"></ol>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Text Processor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    #input-text {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    #processed-text {
+      list-style-type: none;
+      padding: 0;
+    }
+    #processed-text li {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    .custom-checkbox {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .custom-checkbox.checked::after {
+      content: '\274C';
+      font-size: 16px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: red;
+    }
+    .copy-button, .remove-button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .copy-button {
+      background-color: #4caf50;
+      color: white;
+    }
+    .remove-button {
+      background-color: #f44336;
+      color: white;
+      margin-left: 10px;
+    }
+    .copy-button:hover, .remove-button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <h1>Text Processor</h1>
+  <textarea id="input-text" placeholder="Enter your passage..."></textarea>
+  <button onclick="processText()">Process Text</button>
+  <button class="copy-button" onclick="copyProcessedText()">Copy All</button>
+  <button class="remove-button" onclick="removeSelectedWords()">Remove</button>
+  <ol id="processed-text"></ol>
+  <script>
+    function processText() {
+      var inputText = document.getElementById('input-text').value;
+      var processedText = inputText
+        .replace(/\[^\\w\\s\]|\_/g, '')
+        .replace(/\\s+/g, ' ')
+        .toLowerCase();
+      var words = processedText.split(' ');
+      var list = document.getElementById('processed-text');
+      list.innerHTML = '';
+      for (var i = 0; i < words.length; i++) {
+        var listItem = document.createElement('li');
+        var checkbox = document.createElement('span');
+        checkbox.classList.add('custom-checkbox');
+        checkbox.addEventListener('click', toggleWord);
+        var wordSpan = document.createElement('span');
+        wordSpan.textContent = words[i] + ' - ';
+        listItem.appendChild(checkbox);
+        listItem.appendChild(wordSpan);
+        list.appendChild(listItem);
+      }
+    }
 
-		<script>
-			function processText() {
-				var inputText = document.getElementById('input-text').value;
-				var processedText = inputText
-					.replace(/[^\w\s]|_/g, '')
-					.replace(/\s+/g, ' ')
-					.toLowerCase();
-				var words = processedText.split(' ');
-				var list = document.getElementById('processed-text');
-				list.innerHTML = '';
+    function toggleWord(event) {
+      var checkbox = event.currentTarget;
+      checkbox.classList.toggle('checked');
+    }
 
-				for (var i = 0; i < words.length; i++) {
-					var listItem = document.createElement('li');
-					listItem.textContent = words[i] + ' - ';
-					list.appendChild(listItem);
-				}
-			}
+    function copyProcessedText() {
+      var processedText = Array.from(document.querySelectorAll('#processed-text li span:not(.custom-checkbox)'))
+        .map(span => span.textContent)
+        .join('\n');
+      navigator.clipboard
+        .writeText(processedText)
+        .then(() => {
+          alert('Processed text copied to clipboard!');
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+        });
+    }
 
-			function copyProcessedText() {
-				var processedText = Array.from(document.querySelectorAll('#processed-text li'))
-					.map((li) => li.textContent)
-					.join('\n');
-				navigator.clipboard
-					.writeText(processedText)
-					.then(() => {
-						alert('Processed text copied to clipboard!');
-					})
-					.catch((err) => {
-						console.error('Failed to copy: ', err);
-					});
-			}
-		</script>
-	</body>
+    function removeSelectedWords() {
+      var listItems = document.querySelectorAll('#processed-text li');
+      for (var i = 0; i < listItems.length; i++) {
+        var checkbox = listItems[i].querySelector('.custom-checkbox');
+        if (checkbox.classList.contains('checked')) {
+          listItems[i].remove();
+        }
+      }
+    }
+  </script>
+</body>
 </html>
