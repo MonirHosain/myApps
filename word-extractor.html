@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Text Processor</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 20px;
+			}
+			#input-text {
+				width: 100%;
+				height: 100px;
+				padding: 10px;
+				margin-bottom: 10px;
+			}
+			#processed-text {
+				list-style-type: none;
+				padding: 0;
+			}
+			#processed-text li {
+				margin-bottom: 5px;
+			}
+			.cross-icon {
+				cursor: pointer;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Text Processor</h1>
+		<textarea id="input-text" placeholder="Enter your passage..."></textarea>
+		<button onclick="processText()">Process Text</button>
+		<ol id="processed-text"></ol>
+
+		<script>
+			function processText() {
+				var inputText = document.getElementById('input-text').value;
+				var processedText = inputText
+					.replace(/[^\w\s]|_/g, '')
+					.replace(/\s+/g, ' ')
+					.toLowerCase();
+				var words = processedText.split(' ');
+				var list = document.getElementById('processed-text');
+				list.innerHTML = '';
+
+				for (var i = 0; i < words.length; i++) {
+					var listItem = document.createElement('li');
+					listItem.innerHTML = '<span class="cross-icon" onclick="removeItem(this)">&#10006;</span> ' + words[i] + ' - ';
+					list.appendChild(listItem);
+				}
+			}
+
+			function removeItem(item) {
+				item.parentNode.parentNode.removeChild(item.parentNode);
+			}
+		</script>
+	</body>
+</html>
