@@ -88,9 +88,10 @@
 				list.innerHTML = '';
 				uniqueWords.forEach((word) => {
 					// Check if the word is "is", "and", or "to", or empty, if so, skip it
-					if (word === 'is' || word === 'and' || word === 'to' || word === '') {
+					if (word === 'one' || word === 'day' || word === 'red' || word === 'will' || word === 'be' || word === 'at' || word === 'with' || word === 'into' || word === 'an' || word === 'my' || word === 'four' || word === 'in' || word === 'they' || word === 'not' || word === 'but' || word === 'its' || word === 'his' || word === 'words' || word === 'right' || word === 'black' || word === 'boys' || word === 'girls' || word === 'join' || word === 'as' || word === 'sisters' || word === 'every' || word === 'shall' || word === 'all' || word === 'flesh' || word === 'this' || word === 'our' || word === 'go' || word === 'we' || word === 'out' || word === 'work' || word === 'up' || word === 'for' || word === 'free' || word === 'america' || word === 'true' || word === 'so' || word === 'let' || word === 'have' || word === 'to' || word === 'and' || word === 'a' || word === 'on' || word === 'by' || word === 'of' || word === 'that' || word === 'or' || word === 'is' || word === 'us' || word === 'life' || word === 'it') {
 						return;
 					}
+
 					var listItem = document.createElement('li');
 					var checkbox = document.createElement('span');
 					checkbox.classList.add('custom-checkbox');
